@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TESSERACT</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400&display=swap" rel="stylesheet" />
+  <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-myeongjo.css" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: black;
+      font-family: 'Nanum Myeongjo', serif;
+      color: #DAFDFF;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 100px;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 2000;
+    }
+
+    nav a {
+      color: #DAFDFF;
+      text-decoration: none;
+      font-size: 14px;
+      font-style: italic;
+      text-transform: none;
+      white-space: nowrap;
+      transition: all 0.2s ease-in-out;
+    }
+
+    nav a:hover {
+      text-shadow: 0 0 30px rgba(218, 253, 255, 1);
+    }
+
+    .section {
+      width: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .full-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .text-overlay {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      padding: 20px;
+    }
+
+
+    .quote {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: #DAFDFF;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px rgba(218, 253, 255, 0.4);
+    }
+
+    .description {
+      font-size: 18px;
+      line-height: 1.8;
+      white-space: pre-line;
+      text-shadow: 0 0 8px rgba(218, 253, 255, 0.3);
+    }
+
+    .tesseract-title {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: #86F5FF;
+      text-shadow: 0 0 8px rgba(134, 245, 255, 0.4);
+      margin-bottom: 60px;
+      line-height: 1.6;
+    }
+
+    .tesseract-description {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 18px;
+      color: white;
+      line-height: 1.9;
+      white-space: pre-line;
+    }
+
+    .fixed-top-text {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .bodoni-highlight {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: #86F5FF;
+      text-shadow: 0 0 8px rgba(134, 245, 255, 0.4);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      white-space: pre-line;
+      text-align: center;
+    }
+
+    .triplet-wrapper {
+      position: absolute;
+      top: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 72%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      text-align: center;
+    }
+
+    .triplet {
+      flex: 1;
+      padding: 0 10px 10px 10px;
+    }
+
+    .triplet .subtitle {
+      font-family: 'Bodoni Moda', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: #86F5FF;
+      text-shadow: 0 0 6px rgba(134, 245, 255, 0.4);
+      margin-bottom: 15px;
+    }
+
+    .triplet .subtext {
+      margin-top: 16px;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: white;
+      white-space: pre-line;
+    }
+    .vertical-text-container {
+      position: absolute;
+      top: -14.4em;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .vertical-text {
+      writing-mode: vertical-rl;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 33px;
+      letter-spacing: 0.5px;
+      color: #DAFDFF;
+      text-shadow: 0 0 12px #002147;
+    }
+
+    .vertical-text span {
+      display: inline-block;
+      opacity: 0.3;
+      transition: opacity 0.3s;
+    }
+    .fade-in-section {
+      opacity: 0.3;
+      transition: opacity 0.5s ease-in-out;
+    }
+    .fade-in-content {
+      position: relative;
+      white-space: normal;
+      word-break: keep-all;
+      color: white;
+    }
+    .fade-in-title {
+      font-family: 'Bodoni Moda', serif;
+      font-size: 27px;
+      text-shadow: 0 0 8px #86F5FF;
+      margin-bottom: 8px;
+    }
+    .fade-in-desc {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+     #map {
+      position: relative;
+    }
+
+     #map .frame-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1500;
+      backdrop-filter: blur(50px);
+      -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(0,0,0,1) 65%);
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(0,0,0,1) 65%);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#about">About Tesseract</a>
+    <a href="#map">Travel Map</a>
+    <a href="#message">Message Service</a>
+  </nav>
+
+  <!-- 배경 1 -->
+  <div class="section">
+    <img src="BG 1.jpg" alt="BG1" class="full-image" />
+  </div>
+
+  <!-- 배경 2 -->
+  <div class="section" id="about">
+    <img src="BG 2.png" alt="BG2" class="full-image" />
+    <div class="text-overlay">
+      <div class="quote">“The only things that can transcend time and space are gravity and love.”</div>
+      <div class="description">
+시공간을 초월할 수 있는 것은 중력과 사랑 뿐입니다.
+미래의 메시지 전달 서비스 Tesseract에서는 과거로 돌아가 사랑하는 이에게 메세지를 전달할 수 있도록 돕습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 배경 3 -->
+  <div class="section">
+    <img src="BG 3.png" alt="BG3" class="full-image" />
+    <div class="text-overlay">
+      <div class="tesseract-title">
+        The Tesseract:<br />
+        Gateway to Transcending Time and Space
+      </div>
+      <div class="tesseract-description">
+여러분은 만날 수 없는 사람에게 사랑한다는 말을 전하고 싶었던 적이 있으신가요?
+
+아인슈타인의 상대성 이론에 따르면 시간과 공간은 서로 융합되어 절대적인 독립성을 갖지 못합니다.메세지 전달 서비스 Tesseract는 이러한 상대성 이론을 기반해 웜홀 ‘Kerrway’ 생성하고 그 안에 5차원 공간을 만들었습니다. 이 공간을 통해 당신이 원하는 시점의 과거 혹은 미래로 자유롭게 이동할 수 있습니다.Tesseract에서는 시간과 공간을 초월하여 사랑하는 이에게 메시지를 전달할 수 있는 특별한 경험을 제공합니다.
+
+중력과 사랑만이 시공간을 넘나들 수 있다는 믿음 아래,
+Tesseract가 당신의 시간을 넘은 메세지 전달을 도와드리겠습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 배경 4 -->
+  <div class="section">
+    <img src="BG 4.png" alt="BG4" class="full-image" />
+    <div class="fixed-top-text">
+      <div class="tesseract-title">
+        The Mechanism of<br />
+        the Tesseract Enabling Time Travel
+      </div>
+      <div class="tesseract-description">
+Tesseract는 4차원 초입방체로, 우리에게 익숙한 3차원 공간을 넘어서는 개념입니다. 
+3차원 공간에서 입방체가 6개의 면으로 구성된 것처럼, 4차원 공간에서의 입방체인 Tesseract는 8개의 3차원 입방체로 구성됩니다. 이러한 개념을 통해 Tesseract는 
+시공간을 초월할 수 있게 됩니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 배경 5 -->
+  <div class="section">
+    <img src="BG 5.svg" alt="BG5" class="full-image" />
+    <div class="triplet-wrapper">
+      <div class="triplet">
+        <div class="subtitle">4D Space and Time Travel</div>
+        <div class="subtext">우리는 보통 길이, 너비, 높이의 3차원 공간 속에서 살아가지만, Tesseract는 이 세 차원에 더해 시간이라는 네 번째 차원을 포함합니다. 이 네 번째 차원을 통해 우리는 시간을 초월한 여행을 떠날 수 있습니다. Tesseract의 각 면이 다른 시간대를 연결하는 문이 되어, 특정 시간대에 위치한 사람과 소통할 수 있게 됩니다.</div>
+      </div>
+      <div class="triplet">
+        <div class="subtitle">Gravity and Curved Space</div>
+        <div class="subtext">아인슈타인의 일반 상대성 이론에 따르면, 중력은 공간을 휘게 만들고 빛조차도 중력의 경로를 따라 휘어집니다. 이러한 원리를 응용하여, 테서렉트 또한 중력의 힘을 이용해 시공간을 휘게 만듭니다. 테서렉트 내부에서는 시공간이 휘어져 서로 다른 시간대가 연결될 수 있으며 이를 통해 과거나 미래로의 시간 여행이 가능합니다.</div>
+      </div>
+      <div class="triplet">
+        <div class="subtitle">Quantum Entanglement and Instantaneous Connection</div>
+        <div class="subtext">양자 물리학의 원리 중 하나인 양자 얽힘은 두 개의 입자가 서로 멀리 떨어져 있어도 즉각적으로 영향을 주고받을 수 있다는 것을 설명합니다. 테서렉트는 이러한 양자 얽힘의 원리를 적용하여, 서로 다른 시간대에 있는 사람들 간의 즉각적인 소통을 가능하게 합니다. 이를 통해 과거나 미래의 사랑하는 사람에게 메시지를 전달할 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 배경 6 + 회전하는 세로 문장 -->
+  <div class="section">
+    <img src="BG 6.svg" alt="BG6" class="full-image" />
+   <div class="vertical-text-container">
+    <div class="vertical-text">
+      <span>당</span><span>신</span><span>의</span><span> </span><span>메</span><span>세</span><span>지</span><span>는</span><span> </span><span>가</span><span>르</span><span>강</span><span>튀</span><span>아</span><span>의</span><span> </span><span>중</span><span>심</span><span>에</span><span>서</span><span> </span><span>테</span><span>서</span><span>렉</span><span>트</span><span>를</span><span> </span><span>타</span><span>고</span><span> </span><span>다</span><span>른</span><span> </span><span>구</span><span>속</span><span> </span><span>브</span><span>레</span><span>인</span><span>에</span><span> </span><span>안</span><span>착</span><span>해</span><span> </span><span>과</span><span>거</span><span>로</span><span> </span><span>향</span><span>한</span><span>다</span><span>.</span>
+    </div>
+  </div>
+  </div>
+
+  <style>
+    .vertical-text-container {
+      position: absolute;
+      top: -19em;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .vertical-text {
+      writing-mode: vertical-rl;
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 33px;
+      letter-spacing: 0.5px;
+      color: #DAFDFF;
+      text-shadow: 0 0 8px rgba(134, 245, 255, 0.4);
+      
+    }
+
+    
+  </style>
+
+
+  <!-- 배경 7 + 문장 2줄 -->
+  <div class="section" id="map">
+    <img src="BG 7-1.svg" alt="BG7-1" class="full-image" />
+    <div class="frame-mask"></div>
+
+    <div class="text-overlay" style="top: 18em;">
+      <div class="tesseract-description" style="font-size: 18px;">
+        당신이 전송할 메시지는 블랙홀, 사건의 지평선, 웜홀을 거쳐 당신이 사랑하는 이에게 도착합니다. 서비스 테서렉트가 메세지를 전달하는 과정을 함께 느껴보세요.
+     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+     <div class="fade-in-section fade-in-content"
+     style="position: relative;
+  left: 600px;
+  text-align: left;
+  white-space: normal;
+  word-break: keep-all;
+">
+        <div style="font-family: 'Bodoni Moda', serif; font-size: 27px; color: white; text-shadow: 0 0 8px #86F5FF; margin-bottom: 8px;">
+          01 Blackhole Gargantua
+        </div>
+        <div style="font-family: 'Nanum Myeongjo', serif; font-size: 18px; color: white; line-height: 1.7;">
+          메시지를 전달하기 위해 가장 먼저 블랙홀에 접근합니다.<br />
+          블랙홀은 강력한 중력으로 인해 빛조차 탈출할 수 없는<br />
+          우주의 영역입니다.
+        </div>
+      </div>
+
+      <br /><br /><br /><br /><br /><br /><br /><br />
+      <div style="position: relative; left: -180px; text-align: left; white-space: normal; word-break: keep-all;">
+
+        <div style="font-family: 'Bodoni Moda', serif; font-size: 27px; color: white; text-shadow: 0 0 8px #86F5FF; margin-bottom: 8px;">
+          02 Event Horizon
+        </div>
+        <div style="font-family: 'Nanum Myeongjo', serif; font-size: 18px; color: white; line-height: 1.7;">
+          사건의 지평선은 블랙홀 주위에 있는 경계로,<br />
+          이 지평선을 넘어서는 빛이나 물질이 블랙홀의 강력한<br />
+          중력에서 벗어날 수 없게 됩니다. 사건의 지평선은 블랙홀<br />
+          내부와 외부를 구분하며, 이 경계 안쪽에서는 모든 것이<br />
+          블랙홀 중심으로 끌려가게 됩니다.
+        </div>
+        <br /><br /><br /><br /><br />
+
+<div  class="fade-in-section fade-in-content" style="position: relative; left: 170px;text-align: center; white-space: normal; word-break: keep-all;">
+  <div style="font-family: 'Bodoni Moda', serif; font-size: 27px; color: white; text-shadow: 0 0 8px #86F5FF; margin-bottom: 8px;">
+    03 Wormhole
+  </div>
+  <div style="font-family: 'Nanum Myeongjo', serif; font-size: 18px; color: white; line-height: 1.7;">
+    과거에 닿기 위해 구속 브레인과 우리 브레인를 이어주는<br />
+    웜홀로 진입하게 됩니다. 웜홀은 우주의 서로 다른 지점을<br />
+    연결하는 통로로, 공간과 시간을 단축해 먼 거리를 빠르게<br />
+    이동할 수 있는 길 역할을 합니다.
+  </div>
+</div>
+
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+<div  class="fade-in-section fade-in-content" style="position: relative; left: 820px; text-align: left; white-space: normal; word-break: keep-all;">
+  <div style="font-family: 'Bodoni Moda', serif; font-size: 27px; color: white; text-shadow: 0 0 8px #86F5FF; margin-bottom: 8px;">
+    04 Tesseract
+  </div>
+  <div style="font-family: 'Nanum Myeongjo', serif; font-size: 18px; color: white; line-height: 1.7;">
+    웜홀 속에는 5차원 공간, 테서렉트가 있습니다.<br />
+    5차원의 초입방체 형태의 공간에서는 4차원 과거에<br />
+    관여할 수 있습니다. Tesseract는 당신이 사랑하는<br />
+    사람에게 작성한 메시지를 이 5차원 공간에서 4차원<br />
+    과거로 전달합니다.
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+
+
+ <div class="section" id="message">
+    <img src="BG 8.png" alt="BG8" class="full-image" />
+    <div class="message-intro">
+      <div class="text">과거의 어떠한 순간으로 메세지를 보내보세요<br />
+      당신이 작성한 메세지는 모스부호로 변환되어 5차원 공간으로 전송됩니다.</div>
+      <div class="letter-wrapper">
+        <img src="LETTER.png" alt="LETTER" class="letter-image" />
+        <div class="letter-glow"></div>
+        <div class="click-text">Pay 10,000,000$ to Write</div>
+      </div>
+    </div>
+  </div>
+  <style>
+
+  .message-intro {
+      position: absolute;
+      top: -4%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .message-intro .text {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 19px;
+      color: #DAFDFF;
+      text-align: center;
+      line-height: 1.8;
+       margin-top: 100px;
+    }
+
+    .letter-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .letter-image {
+      width: 70%; /* 5배 크기 대신 70%로 조정 */
+      max-width: none;
+      height: auto;
+      display: block;
+      position: relative;
+      transform-origin: top center;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      z-index: 2;
+      box-shadow: none;
+    }
+
+      .letter-wrapper:active .letter-image {
+      transform: scale(1.1);
+      box-shadow: 0 20px 40px rgba(134, 245, 255, 0.6);
+    }
+
+    .click-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bodoni Moda', serif;
+      font-size: 50px; /* 기존 대비 3배 크기 */
+      color: white;
+      text-shadow: 0 0 30px #00BFD0;; /* 훨씬 넓은 그림자 */
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      z-index: 3;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .letter-wrapper:hover .click-text {
+      opacity: 1;
+    }
+  </style>
+  
+
+<script>
+  window.addEventListener('scroll', () => {
+    // 1. 세로 글자 흐릿해졌다가 중앙오면 또렷해지는 효과
+    const spans = document.querySelectorAll('.vertical-text span');
+    spans.forEach(span => {
+      const rect = span.getBoundingClientRect();
+      const center = window.innerHeight / 2;
+      const distance = Math.abs(rect.top + rect.height / 2 - center);
+      const maxDistance = window.innerHeight / 2;
+      let opacity = 1 - distance / maxDistance;
+      opacity = Math.max(0.3, Math.min(1, opacity));
+      span.style.opacity = opacity;
+    });
+
+    // 2. 문단 fade-in 효과
+    const sections = document.querySelectorAll('.fade-in-section');
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      const center = window.innerHeight / 2;
+      const distance = Math.abs(rect.top + rect.height / 2 - center);
+      const maxDistance = window.innerHeight / 2;
+      let opacity = 1 - distance / maxDistance;
+      opacity = Math.max(0.3, Math.min(1, opacity));
+      section.style.opacity = opacity;
+    });
+
+   const frameMask = document.querySelector('.frame-mask');
+    const mapSection = document.getElementById('map');
+    const rect = mapSection.getBoundingClientRect();
+
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      frameMask.style.display = 'block';
+    } else {
+      frameMask.style.display = 'none';
+    }
+  });
+</script>
+
+
+</body>
+
+  
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
